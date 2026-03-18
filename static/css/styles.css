@@ -356,10 +356,6 @@ td {
     overflow-wrap: break-word;
 }
 
-tbody {
-    font-weight: 600;
-}
-
 /* Row hover effect */
 tbody tr:hover {
     background-color: #f9fbff;
