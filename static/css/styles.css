@@ -350,9 +350,14 @@ td {
     padding: 14px 16px;
     border-bottom: 1px solid #f0f0f0;
 
+
     /* Important for wrapping */
     word-wrap: break-word;
     overflow-wrap: break-word;
+}
+
+tbody {
+    font-weight: 600;
 }
 
 /* Row hover effect */
@@ -486,6 +491,20 @@ table a:hover {
     border-bottom: 1px solid #ececec;
 }
 
+.registered-details-disclaimer {
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    width: 65%;
+    margin: 0 auto;
+
+    padding: 12px 0;
+
+    border-bottom: 1px solid #c23e3e;
+}
+
 /* Labels */
 .filler {
     width:5%;
@@ -582,8 +601,19 @@ table a:hover {
     color: white;
 }
 
-.filler-div {
-    height: 5vh;
+.disclaimer-div {
+    height: 8vh;
+
+    padding-top: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.disclaimer {
+    text-align: center;
+    font-weight: 600;
+    font-size: 12px;
 }
 
 .personal-info-unavail {

@@ -51,6 +51,11 @@
         
         <!-- Check if in extra data else dont show -->
         {% if personal_info %}
+        <div class="registered-details-disclaimer">
+            <p class="disclaimer"><strong>Note:</strong> The information below <strong class="red-colour">SHOULD NOT</strong> be used as medical advice!</p>
+            <p class="disclaimer">This is a passion project. The information gathered below is done through personal research and studying online.</p>
+        </div>
+
         <div class="registered-details">
             
             <p class="dosage-info">Dosage: {{personal_info["dosage"]}} </p>
