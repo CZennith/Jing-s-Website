@@ -20,7 +20,7 @@ def first_letter_capital(to_cap):
     return " ".join(inp_list)
 
 
-with open("Medicine Data\ListingofRegisteredTherapeuticProducts.csv", 'r', encoding='utf-8') as file:
+with open("Medicine Data/ListingofRegisteredTherapeuticProducts.csv", 'r', encoding='utf-8') as file:
     csvreader = csv.DictReader(file)
 
     for row in csvreader:
@@ -41,7 +41,7 @@ with open("Medicine Data\ListingofRegisteredTherapeuticProducts.csv", 'r', encod
              active_ingredient_list.append(row["active_ingredients"])
 
 
-with open("Medicine Data\Jingendata.csv", 'r', encoding='utf-8') as file:
+with open("Medicine Data/Jingendata.csv", 'r', encoding='utf-8') as file:
     csvreader = csv.DictReader(file)
 
     for row in csvreader:
