@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container-fluid main-medicine-block">
+
+    <div class="medicine-header">
+        <p class="code-header">{{ medicine_info["atc_code"] }}</p>
+        <h2 class="product-name">{{ medicine_info["product_name"] }}</h2>
+    </div>
+    
+    <div class="governmental-records">
+        
+        <div class="registered-details">
+            
+            <p class="medicine-page-info">License Number: {{ medicine_info["licence_no"] }}</p>
+            <p class="filler"></p>
+            <p class="medicine-page-info">License Holder: {% if medicine_info["license_holder"] == "" %}-{% endif %}{{ medicine_info["license_holder"] }}</p>
+        </div>
+
+        <!-- <div class="registered-details">
+            
+            <p class="medicine-page-info"> Approval Date: {{ medicine_info["approval_d"] }}</p>
+            <p class="filler"></p>
+            <p class="medicine-page-info">Sale: {{ medicine_info["forensic_classification"] }}</p>
+        </div> -->
+
+        <!-- <div class="registered-details">
+            
+            <p class="medicine-page-info">ROA: {{ medicine_info["route_of_administration"] }}</p>
+            <p class="filler"></p>
+            <p class="medicine-page-info">Dosage Form: {{ medicine_info["dosage_form"] }}</p>
+        </div> -->
+
+        <!--  <div class="registered-details">
+            
+            <p class="medicine-page-info">Manufacturer Country: {{ medicine_info["country_of_manufacturer"] }}</p>
+            <p class="filler"></p>
+            <p class="medicine-page-info">Manufacturer: {{ medicine_info["manufacturer"] }}</p>
+        </div> -->
+
+        <div class="registered-details">
+            
+            <!-- <p class="medicine-page-info">Strength: {{ for_info_strength }}</p>
+            <p class="filler"></p>
+            <p class="medicine-page-info">Active Ingredients: {{ for_info_ingredients }}</p> -->
+            <p class="active-ingredient-info">Active Ingredients: | {% for i in range(number_repititions) %} {{ medicine_ingredients[i] }} {{ for_info_strength[i] }} | {% endfor %}</p>
+        </div>
+
+        
+        <!-- Check if in extra data else dont show -->
+        {% if personal_info %}
+        <div class="registered-details">
+            
+            <p class="dosage-info">Dosage: {{personal_info["dosage"]}} </p>
+            <p class="dosage-info">Hourly Interval: {{personal_info["hourly_interval"]}} </p>
+            <p class="dosage-info">Times Per Day: {{personal_info["times_per_day"]}} </p>
+            <p class="dosage-info red-colour">Max Daily Dosage: {{personal_info["max_dosage_per_day"]}} </p>
+
+        </div>
+
+        <div class="registered-details">
+            
+            <p class="medicine-page-info">
+                To Treat: 
+                {% for to_treat in personal_info["max_dosage"] %}<span class="medicine-column-info">  </span>{% endfor %}
+            </p>
+            <p class="filler"></p>
+            <p class="medicine-page-info">
+                Drug Interaction:  
+                {% for interactions in personal_info["drug_interaction"] %}<span class="medicine-column-info">{{ interactions }}</span>  {% endfor %}
+            </p>
+
+        </div>
+
+        <div class="registered-details">
+            
+            <p class="medicine-page-info">
+                Possible Side Effects:
+                {% for effects in personal_info["side_effects"] %}<span class="medicine-column-info">{{ effects }}</span>  {% endfor %}
+            </p>
+            <p class="filler"></p>
+            <p class="medicine-page-info">
+                Contraindication:
+                {% for contras in personal_info["contraindication"] %}<span class="medicine-column-info red-colour">{{ contras }}</span>  {% endfor %}
+            </p>
+
+        </div>
+        {% else %}
+        <h3 class="personal-info-unavail">Currently Reseaching..!</h3>
+        {% endif %}
+
+    </div>
+
+    <div class="more-details-div">
+        
+        <div class="redirected-ingredient">
+            
+            <div class="pubmed-link">
+                <!-- https://pubmed.ncbi.nlm.nih.gov/?term=AMLODIPINE+BESILATE -->
+                {% for ingredient in medicine_ingredients %}
+                <a class="active-ingredient-redirect pubmed" href="https://pubmed.ncbi.nlm.nih.gov/?term={{ ingredient }}" target="_blank">
+                    Search {{ ingredient }} on PubMed >
+                </a>
+                {% endfor %}
+            </div>
+            <div class="healthhub-link">
+                <!-- https://www.healthhub.sg/medication-devices-and-treatment/medications?filter=keywords#keywordsearch_q=[INSERT SEARCH HERE]&keywordsearch_e=0 -->
+                {% for ingredient in medicine_ingredients %}
+                <a class="active-ingredient-redirect healthhub" href="https://www.healthhub.sg/medication-devices-and-treatment/medications?filter=keywords#keywordsearch_q={{ ingredient }}&keywordsearch_e=0" target="_blank">
+                    Search {{ ingredient }} on HealthHub >
+                </a>
+                {% endfor %}
+                
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

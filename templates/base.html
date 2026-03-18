@@ -1,0 +1,48 @@
+<!-- base.html -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+        <link rel="stylesheet" href="/static/css/styles.css">
+    </head>
+
+    <body class="page-content">
+
+        <nav class="custom-navbar">
+            <div class="container-fluid navbar-layout">
+                <a class="navbar-brand" href="/">
+                    <img src="static\images\pill-logo-img.png" alt="Logo" width="60" height="48" class="d-inline-block align-text-top">
+                    Jingen
+                </a>
+                <div class="nav-center">
+
+                    <a class="nav-link {% if page == 'About' %}active{% endif %} " href="/about">About</a>
+                    <a class="nav-link {% if page == 'Search' %}active{% endif %} " href="/search?search=">Search</a>
+                    <a class="nav-link {% if page == 'Medicine' %}active{% endif %} " href="/medicine">Medicine</a>
+                    
+                </div>    
+                
+            </div>
+        </nav>
+
+        <main class="page-content bg-colour-b">
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer class="footer-own">
+            <div class="container-fluid footer-layout" >
+                <div class="short-description">
+                    <p>test</p>
+                </div>
+                <div class="referrals">
+                    <p>test</p>
+                </div>
+                <div class="contact-list">
+                    <p>test</p>
+                </div>
+            </div>
+        </footer>
+
+    </body>
+</html>

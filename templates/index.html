@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container-fluid main-body">
+    <div class="search-bar-design">
+        <h1 class="eye-catch">Search your medication here!</h1>
+        <form class="home-search-form" action="/search" method="GET" autocomplete="off">
+            <div class="autocomplete">
+                <input id="user-input" class="home-search-input" type="text" name="search" placeholder="Paracetemol..." />
+            </div>
+            <button class="search-form-button" type="submit"></button>
+        </form> 
+    </div>
+</div>
+
+<script>
+    const medicine_list = {{ medicine_name_list | tojson }};
+</script>
+
+<script src="{{ url_for('static', filename='js/autocomplete.js') }}"></script>
+
+<script>
+    autocomplete_search(document.getElementById("user-input"), medicine_list);
+</script>
+{% endblock content %}
