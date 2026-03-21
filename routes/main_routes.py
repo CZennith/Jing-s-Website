@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, redirect
 import math
 from services.medicine_service import search_medicine, search_medicine_by_licence, get_medicine_ingredient, replace_and_symbol, get_medicine_list, get_personal_data, get_known_medicines
 main = Blueprint("main", __name__)
@@ -6,9 +6,10 @@ main = Blueprint("main", __name__)
 @main.route("/")
 def homepage():
 
-    medicine_name_list = get_medicine_list()
-
-    return render_template("index.html", medicine_name_list = medicine_name_list)
+    # medicine_name_list = get_medicine_list()
+    #return render_template("index.html", medicine_name_list = medicine_name_list)
+    
+    return redirect("/search?search=")
 
 @main.route("/about")
 def about():
@@ -18,7 +19,7 @@ def about():
 @main.route("/search")
 def search():
     medicine_name_list = get_medicine_list()
-
+ 
     medicine_to_search = request.args.get("search")
     current_page = request.args.get("page")
     if current_page == None or not current_page.isnumeric:
@@ -80,3 +81,8 @@ def medicine():
 
 
     return render_template("medicine.html", known_medicine_to_display = known_medicine_to_display, current_page = current_page, no_pages = no_pages)
+
+@main.route("/instruction")
+def instruction():
+
+    return render_template("instruction.html")

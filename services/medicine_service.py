@@ -73,10 +73,7 @@ def search_medicine(query):
 
     for row in medicine_data:
         
-        if query.upper() in row["product_name"] or query.upper() in row["product_name"].upper():
-            results.append(row)
-
-        if query.upper() in row["active_ingredients"] or query.upper() == row["active_ingredients"].upper():
+        if query.upper() in row["product_name"].upper() or query.upper() in row["active_ingredients"].upper():
             results.append(row)
 
     return results
