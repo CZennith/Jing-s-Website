@@ -11,6 +11,12 @@ def homepage():
     
     return redirect("/search?search=")
 
+@main.route("/index")
+def index(): 
+
+    medicine_name_list = get_medicine_list()
+    return render_template("index.html", medicine_name_list = medicine_name_list)
+
 @main.route("/about")
 def about():
 
