@@ -5,6 +5,8 @@ medicine_data = []
 medicine_by_licence = {}
 medicine_name_list = []
 active_ingredient_list = []
+symptom_name_list = []
+symptom_medicine_list = {}
 
 personal_data = {}
 known_medicine_list = []
@@ -57,6 +59,17 @@ with open("Medicine Data/Jingendata.csv", 'r', encoding='utf-8') as file:
 
         personal_data[licence_no] = temp_dict
 
+# with open("Medicine Data/Syhmptoms.csv", 'r', encoding='utf-8') as file:
+#     csvreader = csv.DictReader(file)
+
+#     for row in csvreader:
+#         symptom = row["symptom"]
+
+#         symptom_name_list.append(symptom)
+#         symptom_medicine_list[symptom] = row["medication"].split(", ")
+
+
+
 def get_personal_data(licence_no):
      
     return personal_data[licence_no]
@@ -67,6 +80,9 @@ def get_known_medicines():
 
 def get_medicine_list():
     return medicine_name_list
+
+# def get_symptom_list():
+#     return symptom_name_list
 
 def search_medicine(query):
     results = []
@@ -86,6 +102,13 @@ def search_medicine_by_licence(returned_licence_no):
     else:
         return None
     
+# def search_medicine_by_symptom(symptom):
+
+#     if symptom in [symptom to medicine dictionary]:
+#         return dictionary[symptom]
+#     else:
+#         return []
+
 
 def get_medicine_ingredient(ingredient):
     returned_ingredients = []

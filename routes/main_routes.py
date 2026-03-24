@@ -41,8 +41,31 @@ def search():
     medicine_to_display = medicine_results[(20 * (current_page - 1)) : (20 * current_page)]
 
 
-
     return render_template("search.html", medicine_to_search = medicine_to_search, no_pages = no_pages, medicine_to_display = medicine_to_display, current_page = current_page, medicine_results = medicine_results, medicine_name_list = medicine_name_list)
+
+# @main.route("/symptoms")
+# def symptoms():
+#     symptom_name_list = get_symptom_list()
+    
+#     # when symptom to medicine list come retrieve license nos connected to symptom and list them out 
+
+#     symptom_to_search = request.args.get("symptoms")
+#     current_page = request.args.get("page")
+#     if current_page == None or not current_page.isnumeric:
+#         current_page = 1
+#     current_page = int(current_page)
+
+#     medicine_results = search_medicine_by_symptom(symptom_to_search)
+
+#     no_result = len(medicine_results)
+#     no_pages = math.ceil(no_result / 20)
+#     if no_pages < 1:
+#         no_pages = 1
+
+#     medicine_to_display = medicine_results[(20 * (current_page - 1)) : (20 * current_page)]
+
+
+#     return render_template("symptoms.html", medicine_to_search = medicine_to_search, no_pages = no_pages, medicine_to_display = medicine_to_display, current_page = current_page, medicine_results = medicine_results, medicine_name_list = medicine_name_list)
 
 @main.route("/medicine/<licence_no>")
 def medicine_by_license(licence_no):

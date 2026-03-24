@@ -1,9 +1,133 @@
 {% extends "base.html" %}
 
-{% block title %}Symptoms{% endblock %}
+{% block title %}
+Search Results
+{% endblock %}
 
 {% block content %}
-<div class="">
-   
+<div class="container-fluid">
+    <div class="search-page-bar-design">
+        <form class="search-page-form" action="/search" method="GET" autocomplete="off">
+            <div class="autocomplete">
+                <input id="user-input-search" class="search-page-input" type="text" name="search" value="{{ medicine_to_search }}"/>
+            </div>
+            <button class="search-form-button" type="submit"></button>
+        </form>
+    </div>
 </div>
-{% endblock content %}
+
+<div class = "container-fluid medicine-container">
+    <!-- Result list -->
+    <div class="container text-center table-container">
+        <!-- Table Headers -->
+        {% if medicine_results %}
+
+        <table class="results-table">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <!-- <th>Forensic Classification</th>
+                    <th>Dosage Form</th>
+                    <th>Route Of Administration</th> -->
+                    <th>Active Ingredients</th>
+                </tr>
+            </thead>
+            
+            <tbody>
+                {% for medicine in medicine_to_display %}
+                <tr class="link" data-href="/medicine/{{ medicine['licence_no'] }}">
+                    <td><a href="/medicine/{{ medicine['licence_no'] }}">{{ medicine["product_name"] }}</a></td>
+                    <!-- <td> {{ medicine["forensic_classification"] }} </td> -->
+                    <!-- <td> {{ medicine["dosage_form"] }} </td> -->
+                    <!-- <td> {{ medicine["route_of_administration"] }} </td> -->
+                    <td> {{ medicine["active_ingredients"] }} </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+        <div class="pagination">
+            {% if no_pages > 5 %}
+
+                {% if (no_pages - current_page) < 2 %}
+                <a class="pagination-back-anchor" href="/search?search={{ medicine_to_search }}&page={{ current_page - 1}}">&#8592</a>
+                <a class="pagination-anchor" href="/search?search={{ medicine_to_search }}&page=1">1</a>
+                <a class="pagination-anchor-dotdot">..</a>
+                <a class="pagination-anchor {% if current_page == no_pages - 2 %}active{% endif %}" href="/search?search={{ medicine_to_search }}&page={{ no_pages - 2 }}">{{ no_pages - 2 }}</a>
+                <a class="pagination-anchor {% if current_page == no_pages - 1 %}active{% endif %}" href="/search?search={{ medicine_to_search }}&page={{ no_pages - 1 }}">{{ no_pages - 1 }}</a>
+                <a class="pagination-anchor {% if current_page == no_pages %}active{% endif %}" href="/search?search={{ medicine_to_search }}&page={{ no_pages }}">{{ no_pages }}</a>
+                    {% if current_page < no_pages %}
+                    <a class="pagination-next-anchor" href="/search?search={{ medicine_to_search }}&page={{ current_page + 1}}">&#8594</a>
+                    {% endif %}
+
+                {% elif current_page < 3 %}
+
+                    {% if current_page > 1 %}
+                    <a class="pagination-back-anchor" href="/search?search={{ medicine_to_search }}&page={{ current_page - 1}}">&#8592</a>
+                    {% endif %}
+                <a class="pagination-anchor {% if current_page == 1 %}active{% endif %}" href="/search?search={{ medicine_to_search }}&page=1">1</a>
+                <a class="pagination-anchor {% if current_page == 2 %}active{% endif %}" href="/search?search={{ medicine_to_search }}&page=2">2</a>
+                <a class="pagination-anchor" href="/search?search={{ medicine_to_search }}&page=3">3</a>
+                <a class="pagination-anchor-dotdot">..</a>
+                <a class="pagination-anchor" href="/search?search={{ medicine_to_search }}&page={{ no_pages }}">{{ no_pages }}</a>
+                <a class="pagination-next-anchor" href="/search?search={{ medicine_to_search }}&page={{ current_page + 1}}">&#8594</a>
+                
+                {% else %}
+
+                <a class="pagination-back-anchor" href="/search?search={{ medicine_to_search }}&page={{ current_page - 1}}">&#8592</a>
+                <a class="pagination-anchor" href="/search?search={{ medicine_to_search }}&page=1">1</a>
+                <a class="pagination-anchor-dotdot">..</a>
+                <a class="pagination-anchor" href="/search?search={{ medicine_to_search }}&page={{ current_page - 1 }}">{{ current_page - 1 }}</a>
+                <a class="pagination-anchor active" href="/search?search={{ medicine_to_search }}&page={{ current_page }}">{{ current_page }}</a>
+                <a class="pagination-anchor" href="/search?search={{ medicine_to_search }}&page={{ current_page + 1 }}">{{ current_page + 1 }}</a>
+                <a class="pagination-anchor-dotdot">..</a>
+                <a class="pagination-anchor" href="/search?search={{ medicine_to_search }}&page={{ no_pages }}">{{ no_pages }}</a>
+                <a class="pagination-next-anchor" href="/search?search={{ medicine_to_search }}&page={{ current_page + 1}}">&#8594</a>
+                
+                {% endif %}
+
+            {% else %}
+
+                {% if current_page > 1 %}
+                <a class="pagination-back-anchor" href="/search?search={{ medicine_to_search }}&page={{ current_page - 1}}">&#8592</a>
+                {% endif %}
+                {% for pages in range(no_pages) %}
+                <a class="pagination-anchor {% if current_page == pages %}active{% endif %}" href="/search?search={{ medicine_to_search }}&page={{ pages + 1 }}">{{ pages + 1 }}</a>
+                {% endfor %}
+                {% if current_page < no_pages %}
+                <a class="pagination-next-anchor" href="/search?search={{ medicine_to_search }}&page={{ current_page + 1}}">&#8594</a>
+                {% endif %}
+            
+            {% endif %}
+        </div>
+
+        {% else %}
+        <!--No data message-->
+        <div class="no-existing-data">
+            <p>We're working on it!</p>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+<script>
+    let rows = document.querySelectorAll('.results-table tbody > tr');
+
+    for(i = 0; i < rows.length; i++) {
+        rows[i].addEventListener("click", function() {
+            window.location.href = this.querySelector("a[href]").href
+        })
+    }
+</script>
+
+<script>
+    const symptom_list = {{ symptom_name_list | tojson }};
+</script>
+
+<script src="{{ url_for('static', filename='js/autocomplete.js') }}"></script>
+
+<script>
+    autocomplete_search(document.getElementById("user-input-search"), symptom_list);
+</script>
+{% endblock %}
