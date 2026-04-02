@@ -4,6 +4,5 @@ pandas
 requests
 supabase
 bcrypt
-dotenv
-flask_session
-functools
+python-dotenv
+flask-session
