@@ -1,7 +1,10 @@
-from flask import Blueprint, render_template, request, redirect
+from flask import Blueprint, render_template, request, redirect, session
 import math
+from services.sessions_service import get_passid_hash, login_required
 from services.medicine_service import search_medicine, search_medicine_by_licence, get_medicine_ingredient, replace_and_symbol, get_medicine_list, get_personal_data, get_known_medicines
 main = Blueprint("main", __name__)
+
+
 
 @main.route("/")
 def homepage():
@@ -115,3 +118,39 @@ def medicine():
 def instruction():
 
     return render_template("instruction.html")
+
+
+@main.route("/login", methods=["GET", "POST"])
+def login():
+    """Log user in"""
+    # Forget any user_id
+    session.clear()
+
+    # User reached route via POST (as by submitting a form via POST)
+    if request.method == "POST":
+        # Query database for username
+        entered_user = request.form.get("username")
+        entered_password = request.form.get("password").encode("utf-8")
+
+        user_id = get_passid_hash(entered_user, entered_password)
+
+        if user_id == []:
+            return render_template("log-in.html", error = "Incorrect username or password")
+
+        session["user_id"] = user_id
+
+        return redirect("/")
+
+    # User reached route via GET (as by clicking a link or via redirect)
+    else:
+        return render_template("log-in.html")
+
+
+@main.route("/dashboard")
+@login_required
+def dashboard():
+
+    past_entries = []
+
+    return render_template("dashboard.html", entries = past_entries)
+

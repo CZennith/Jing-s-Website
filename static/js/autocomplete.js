@@ -1,8 +1,7 @@
 
 /* done following the w3school guide on autocomplete forms */
 function autocomplete_search(input, arr) {
-    
-    var currentFocus;
+
 
     input.addEventListener("input", function(e) {
         var a, b, i, val = this.value;
@@ -39,45 +38,6 @@ function autocomplete_search(input, arr) {
         }
     });
     
-    input.addEventListener("keydown", function(e) {
-        var x = document.getElementById(this.id + "autocomplete-list");
-        if (x) x = x.getElementsByTagName("DIV");
-
-        if(e.keyCode == 40) {
-            currentFocus++;
-
-            addActive(x)
-        } else if(e.keycode == 38) {
-            currentFocus--;
-
-            addActive(x)
-        } else if (e.keycode == 13) {
-            e.preventDefault();
-
-            if (currentFocus > -1) {
-                if (x) x[currentFocus].click();
-            }
-        }
-    });
-
-    function addActive (x) {
-        
-        if (!x) return false;
-
-        removeActive(x);
-
-        if (currentFocus > x.length) currentFocus = 0;
-        if (currentFocus < -1) currentFocus = (x.length - 1);
-
-        x[currentFocus].classList.add("autocomplete-active");
-    }
-    
-    function removeActive (x) {
-
-        for (let i = 0; i < x.length; i++) {
-            x[i].classList.remove("autocomplete-active");
-        }
-    }
 
     function closeAllLists (elemnt) {
             /*close all autocomplete lists in the document,

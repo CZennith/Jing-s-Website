@@ -1,4 +1,7 @@
 import csv
+import os
+from dotenv import load_dotenv
+from supabase import create_client, Client
 
 #store into memory
 medicine_data = []
@@ -10,6 +13,16 @@ symptom_medicine_list = {}
 
 personal_data = {}
 known_medicine_list = []
+known_medicine_licences = []
+
+load_dotenv()
+
+supabase: Client = create_client(
+    os.environ.get("SUPABASE_URL"),
+    os.environ.get("SUPABASE_PUBLISHABLE_KEY")
+)
+
+
 
 def first_letter_capital(to_cap):
     
@@ -20,6 +33,7 @@ def first_letter_capital(to_cap):
         inp_list[i] = inp_list[i].capitalize()
 
     return " ".join(inp_list)
+
 
 
 with open("Medicine Data/ListingofRegisteredTherapeuticProducts.csv", 'r', encoding='utf-8') as file:
@@ -42,22 +56,82 @@ with open("Medicine Data/ListingofRegisteredTherapeuticProducts.csv", 'r', encod
          if row["active_ingredients"] not in active_ingredient_list:
              active_ingredient_list.append(row["active_ingredients"])
 
+def reset_personal_data():
+    personal_data.clear
+    known_medicine_list.clear()
+    known_medicine_licences.clear()
 
-with open("Medicine Data/Jingendata.csv", 'r', encoding='utf-8') as file:
-    csvreader = csv.DictReader(file)
+    return 
 
-    for row in csvreader:
+def get_personal_data_sp():
+    response = (
+        supabase.table("Personal_data")
+        .select("*")
+        .execute()
+    )
+    supabase_data = response.model_dump() 
 
-        licence_no = row["licence_no"]
-        known_medicine_list.append(medicine_by_licence[licence_no])
+    for row in supabase_data["data"]:
 
-        temp_dict = row
-        temp_dict["drug_interaction"] = row["drug_interaction"].split(", ")
-        temp_dict["contraindication"] = row["contraindication"].split(", ")
-        temp_dict["side_effects"] = row["side_effects"].split(", ")
+            row.pop("id")
+            licence_no = row["licence_no"]
+
+            known_medicine_licences.append(licence_no)
+            known_medicine_list.append(medicine_by_licence[licence_no])
 
 
-        personal_data[licence_no] = temp_dict
+            temp_dict = row
+            temp_dict["drug_interaction"] = row["drug_interaction"].split(", ")
+            temp_dict["contraindication"] = row["contraindication"].split(", ")
+            temp_dict["side_effects"] = row["side_effects"].split(", ")
+
+
+            personal_data[licence_no] = temp_dict
+
+get_personal_data_sp()
+
+# def update_personal_data_sp():
+#     response = (
+#         supabase.table("Personal_data")
+#         .select("*")
+#         .execute()
+#     )
+#     supabase_data = response.model_dump() 
+
+#     starting_index = len(known_medicine_list)
+#     ending_index =  len(supabase_data["data"]) - 1
+
+#     for i in range(starting_index, ending_index):
+
+#             supabase_data["data"][i].pop("id")
+#             licence_no = supabase_data["data"][i]["licence_no"]
+#             known_medicine_list.append(medicine_by_licence[licence_no])
+
+#             temp_dict = supabase_data["data"][i]
+#             temp_dict["drug_interaction"] = supabase_data["data"][i]["drug_interaction"].split(", ")
+#             temp_dict["contraindication"] = supabase_data["data"][i]["contraindication"].split(", ")
+#             temp_dict["side_effects"] = supabase_data["data"][i]["side_effects"].split(", ")
+
+
+#             personal_data[licence_no] = temp_dict
+
+
+
+# with open("Medicine Data/Jingendata.csv", 'r', encoding='utf-8') as file:
+#     csvreader = csv.DictReader(file)
+
+#     for row in csvreader:
+
+#         licence_no = row["licence_no"]
+#         known_medicine_list.append(medicine_by_licence[licence_no])
+
+#         temp_dict = row
+#         temp_dict["drug_interaction"] = row["drug_interaction"].split(", ")
+#         temp_dict["contraindication"] = row["contraindication"].split(", ")
+#         temp_dict["side_effects"] = row["side_effects"].split(", ")
+
+
+#         personal_data[licence_no] = temp_dict
 
 # with open("Medicine Data/Syhmptoms.csv", 'r', encoding='utf-8') as file:
 #     csvreader = csv.DictReader(file)
@@ -74,7 +148,33 @@ def get_personal_data(licence_no):
      
     return personal_data[licence_no]
 
+def get_known_licences():
+    
+    response = (
+        supabase.table("Personal_data")
+        .select("id")
+        .execute()
+    )
+    check_data = response.model_dump()
+    if len(check_data["data"]) != len(known_medicine_list):
+        
+        reset_personal_data()
+        get_personal_data_sp()
+
+    return known_medicine_licences
+
 def get_known_medicines():
+
+    response = (
+        supabase.table("Personal_data")
+        .select("id")
+        .execute()
+    )
+    check_data = response.model_dump()
+    if len(check_data["data"]) != len(known_medicine_list):
+        
+        reset_personal_data()
+        get_personal_data_sp()
 
     return known_medicine_list
 
@@ -145,4 +245,51 @@ def replace_and_symbol(input):
     return input.split("&&")
     
 
+def get_ingredientlicence_by_name(name):
+
+    response = (
+        supabase.table("gov_data")
+        .select("licence_no, active_ingredients")
+        .eq("product_name", name)
+        .execute()
+    )
+
+    data = response.model_dump()["data"][0]
+
+    return data
+
+def get_similar_medicines(ingredient, licence):
+
+    response = (
+        supabase.table("gov_data")
+        .select("licence_no, product_name")
+        .eq("active_ingredients", ingredient)
+        .execute()
+    )
+
+    data = response.model_dump()["data"]
+
+    for i in range(len(data)):
+
+        if data[i]["licence_no"] == licence:
+
+            data.pop(i)
+            return data
+        
+    
+    
+    return data
+
+def get_product_name(licence):
+
+    response = (
+        supabase.table("gov_data")
+        .select("product_name")
+        .eq("licence_no", licence)
+        .execute()
+    )
+
+    data = response.model_dump()["data"][0]["product_name"]
+
+    return data
 

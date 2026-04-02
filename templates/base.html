@@ -17,13 +17,25 @@
                 </a>
                 <div class="nav-center">
 
-                    <a class="nav-link {% if page == 'About' %}active{% endif %} " href="/about">About</a>
-                    <a class="nav-link {% if page == 'About' %}active{% endif %} " href="/instruction">Instruction</a>
-                    <a class="nav-link {% if page == 'Search' %}active{% endif %} " href="/index">Search</a>
-                    <a class="nav-link {% if page == 'Medicine' %}active{% endif %} " href="/medicine">Medicine</a>
+                    <a class="nav-link {% if page == 'About' %}active{% endif %} "  href="/about">About</a>
+                    <a class="nav-link {% if page == 'Instruction' %}active{% endif %} "  href="/instruction">Instruction</a>
+                    <a class="nav-link {% if page == 'Search' %}active{% endif %} "  href="/index">Search</a>
+                    <a class="nav-link {% if page == 'Medicine' %}active{% endif %} "  href="/medicine">Medicine</a>
                     
                 </div>    
+                {% if session["user_id"] %}
                 
+                <div class="navbar-right">
+                    <a class="nav-link {% if page == 'Dashboard' %}active{% endif %}" href="/dashboard">Dashboard </a>
+                    <a class="nav-link" href="/logout">Log Out</a>
+                </div>
+                
+                {% else %}
+                <div class="navbar-right">
+                    <a class="navbar-right nav-link" href="/login">Log in</a>
+                </div>
+                
+                {% endif %}
             </div>
         </nav>
 

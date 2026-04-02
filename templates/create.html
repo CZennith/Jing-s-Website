@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}Create New{% endblock %}
+
+{% block content %}
+
+<div class="main-create-block">
+
+    <div class="licence-selector-div">
+        <div class="licence_selector">
+
+            <div class="autocomplete">
+                <input id="user-licence-input" autocomplete="off" class="create-licence-input" type="text" name="medicine_name" value="{{ target_name }}" placeholder="Paracetemol..." />
+            </div>
+            <button class="search-form-button" id="user-licence-input-button"></button>
+        </div>
+    </div>
+    {% if target_licence %}
+    <form class="extra-medicine-details" method="post" action="/create">
+
+        
+        <div class="extra-details">
+
+            <div class="similar-medicines">
+                <div class="multiple-licence-div">
+                    <label><strong>Chosen Medicines: </strong></label>
+                    <textarea id="multiple-licence-input" class="multiple-licences" type="text" name="multiple-licence-no" >{{ target_licence }}</textarea>
+                </div>
+                <div class="similar-checkboxes" id="checkboxparent">
+                    {% for medicine in similar_medicines %}
+                        
+                        <div class="checkbox-holder-div">
+                            <input type="checkbox" name="similar_medicines" value="{{ medicine['licence_no'] }}" />
+                            <label class="similar-checkboxes-label">
+                                
+                            {{ medicine['product_name'] }}
+                            </label>
+                        </div>
+
+                    {% endfor %}
+                </div>
+
+            </div>
+
+            <div class="quad">
+                <label for="dosage">Dosage: <input id="dosage" type="text" name="dosage" class="quad-input" /></label>
+                
+                <label for="interval">Interval: <input id="interval" type="text" name="interval" class="quad-input" /></label>
+                
+                <label for="times-per-day">Times Per Day: <input id="times-per-day" type="text" name="times-per-day" class="quad-input" /></label>
+                
+                <label for="max-dosage">Max Dosage: <input id="max-dosage" type="text" name="max-dosage" class="quad-input" /></label>
+                
+            </div>
+            
+            <div class="trip">
+                <label for="drug-interaction">Drug Interactions: </label>
+                <textarea id="drug-interaction" type="text" name="drug-interaction" class="trip-input" placeholder="Interaction 1, interaction 2, etc.." ></textarea>
+                <label for="side-effects">Side Effects: </label>
+                <textarea id="side-effects" type="text" name="side-effects" class="trip-input" placeholder="side effect 1, side effect 2, etc.."></textarea>
+                <label for="contraindications">Contraindications: </label>
+                <textarea id="contraindications" type="text" name="contraindications" class="trip-input" placeholder="Contraindication 1, Contraindication 2, etc.."></textarea>
+            </div>
+
+        </div>
+        <div class="button-div">
+            <button class="extra-medicine-button" type="submit">Submit</button>
+        </div>
+        
+    </form>
+    <div class="fill"></div>
+    {% endif %}
+    
+</div>
+
+<script>
+    const medicine_list = {{ medicine_name_list | tojson }};
+</script>
+
+<script src="{{ url_for('static', filename='js/autocomplete.js') }}"></script>
+
+<script>
+    autocomplete_search(document.getElementById("user-licence-input"), medicine_list);
+</script>
+
+<script>   
+
+    let inp = document.getElementById("user-licence-input")
+    let but = document.getElementById("user-licence-input-button")
+    but.addEventListener("click", function(e) {
+        let temp = inp.value;
+        window.location.href = `/create?product_name=${temp}`
+    })
+
+    // var checkboxes = document.querySelectorAll("input[type=checkbox][name=similar_medicines]");
+    
+    // let extraMedicines = []
+
+    // checkboxes.forEach(function(checkbox) {
+    //     checkbox.addEventListener('change', function() {
+            
+    //         input.value = initialValue;
+
+    //         extraMedicines = 
+    //         Array.from(checkboxes) // Convert checkboxes to an array to use filter and map.
+    //         .filter(i => i.checked) // Use Array.filter to remove unchecked checkboxes.
+    //         .map(i => i.value) // Use Array.map to extract only the checkbox values from the array of objects.
+            
+
+    //     })
+    // });
+
+    var input = document.getElementById("multiple-licence-input");
+    const initialValue = input.value;
+
+    var form = document.getElementById("checkboxparent")
+    form.addEventListener("change", function (e) {
+        var checkboxes = document.querySelectorAll("input[type=checkbox][name=similar_medicines]");
+
+        var text = document.getElementById("multiple-licence-input");
+        text.value = initialValue;
+
+        Array.from(checkboxes).forEach(function (checkbox) {
+            if (checkbox.checked) {
+                text.value +=`, ${checkbox.value}` ;
+            }
+        });
+    });
+
+    // check if need to add event listener to only do this at the end
+
+    // let input = document.getElementById("multiple-licence-input");
+    //     input.value = {{ target_licence | safe}};
+
+    //     for (let i = 0; i < extraMedicines.length; i++) {
+    //         input.value += ", " + extraMedicines[i]
+    //     };
+    
+
+</script>
+{% endblock %}

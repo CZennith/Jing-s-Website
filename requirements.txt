@@ -2,3 +2,6 @@ Flask
 gunicorn
 pandas
 requests
+supabase
+bcrypt
+dotenv
